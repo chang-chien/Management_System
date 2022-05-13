@@ -65,8 +65,7 @@ router.post("/login", function (req, res, next) {
           res.status(409).json({ success: false, err: "使用者名稱錯誤" });
         } else {
           const passwordHash = rows[0].password;
-          const correct = bcrypt.compareSync(password, passwordHash);
-          if (!correct) {
+          if (passwordHash != password) {
             res.status(409).json({ success: false, err: "密碼錯誤" });
           } else {
             res.status(200).json({ success: true, userId: rows[0].user_id });
@@ -89,11 +88,13 @@ router.post("/getInformation", function (req, res, next) {
       } else {
         if (rows.length == 0) {
           res.status(409).json({ success: false, err: "使用者不存在" });
+        } else {
+          res.status(200).json({ success: true, userInformation: rows[0] });
         }
-        res.status(200).json({ success: true, userInformation: rows[0] });
       }
     }
   );
 });
+
 
 module.exports = router;
